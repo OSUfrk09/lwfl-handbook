@@ -77,6 +77,37 @@
         columns: 1;
       }
     }
+    /* Smooth scroll + anchor offset so titles aren't hidden under sticky nav */
+    html { scroll-behavior: smooth; }
+    section[id] { scroll-margin-top: 90px; }
+
+    /* Pill nav */
+    .pillnav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(247,248,251,.9);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid #e5e7eb;
+      padding: 10px 12px;
+      margin: 16px 0 8px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.05);
+    }
+    .pillnav .pilllink {
+      display: inline-block;
+      background: rgba(79,70,229,.10);
+      color: var(--brand);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 13px;
+      margin: 6px 8px 6px 0;
+      transition: background .15s ease, box-shadow .15s ease;
+    }
+    .pillnav .pilllink:hover { background: rgba(79,70,229,.16); }
+    .pillnav .pilllink:focus { outline: none; box-shadow: 0 0 0 3px var(--ring); }
+
+    /* Print: hide nav */
+    @media print { .pillnav { display: none; } }
     @media (max-width:1200px){.grid,.grid-3{grid-template-columns:1fr}.two-col{columns:1}}
 
     /* Two‑column bullet list with aligned rows */
@@ -223,8 +254,24 @@
       <p class="mutedlight">Draft Day: <strong>Tuesday, September 2 at 6:30 PM ET (Draft starts: 7:00 PM ET)</strong></p>
     </section>
 
+    <nav class="pillnav">
+      <a class="pilllink" href="#quick-start">Quick Start</a>
+      <a class="pilllink" href="#Rosters">Rosters</a>
+      <a class="pilllink" href="#teams">Teams</a>
+      <a class="pilllink" href="#scoring">Scoring</a>
+      <a class="pilllink" href="#draft-prep">Draft Prep</a>
+      <a class="pilllink" href="#lineups">Lineups</a>
+      <a class="pilllink" href="#waivers">Waivers/FA</a>
+      <a class="pilllink" href="#ir">IR</a>
+      <a class="pilllink" href="#bye-weeks">Bye Weeks</a>
+      <a class="pilllink" href="#trades">Trades</a>
+      <a class="pilllink" href="#playoffs">Playoffs</a>
+      <a class="pilllink" href="#Tips">Tips</a>
+      <a class="pilllink" href="#glossary">Glossary</a>
+    </nav>
+
     <!-- Quick Reference -->
-    <section class="grid" style="margin-top:20px">
+    <section id="quick-start" class="grid" style="margin-top:20px">
       <div class="card">
         <h2>Quick Reference</h2>
         <ul class="list-tight">
@@ -267,7 +314,7 @@
     </section>
 
     <!-- League Structure -->
-    <section class="grid" style="margin-top:20px">
+    <section id="Rosters" class="grid" style="margin-top:20px">
       <div class="card">
         <h2>League Structure</h2>
         <ul class="list-tight">
@@ -300,7 +347,7 @@
     </section>
 
     <!-- TEAMS -->
-    <section class="grid" style="margin-top:20px">
+    <section id="teams" class="grid" style="margin-top:20px">
       <div class="cardAlpha">
         <h2 class="mutedlight">Alpha League</h2>
         <ul class="list-tight">
@@ -334,7 +381,7 @@
     </section>
 
     <!-- Scoring -->
-    <section class="card" style="margin-top:20px">
+    <section id="scoring" class="card" style="margin-top:20px">
       <h2>Scoring (Half-PPR)</h2>
       <div class="grid">
         <div>
@@ -425,7 +472,7 @@
     </section>
 
     <!-- Draft Prep -->
-    <section class="card" style="margin-top:20px">
+    <section id="draft-prep" class="card" style="margin-top:20px">
       <h2>Draft Day Details & Prep</h2>
       <div class="grid">
         <div>
@@ -457,7 +504,7 @@
     </section>
 
     <!-- Weekly Lineups -->
-    <section class="card" style="margin-top:20px">
+    <section id="lineups" class="card" style="margin-top:20px">
       <h2>Setting Your Lineup Each Week</h2>
       <div class="grid">
         <div>
@@ -481,7 +528,7 @@
     </section>
 
     <!-- Waivers / Free Agency -->
-    <section class="card" style="margin-top:20px">
+    <section id="waivers" class="card" style="margin-top:20px">
       <h2>Waivers, Free Agency & Adds/Drops</h2>
       <div class="grid">
         <div>
@@ -510,7 +557,7 @@
     </section>
 
     <!-- IR Slot -->
-    <section class="card" style="margin-top:20px">
+    <section id="ir" class="card" style="margin-top:20px">
       <h2>IR Slot (Injured Reserve)</h2>
       <ul class="list-tight">
         <li>You have <strong>1 IR</strong> spot. A player must have an eligible injury/out designation to move there.</li>
@@ -521,7 +568,7 @@
     </section>
 
     <!-- Bye Weeks -->
-    <section class="card" style="margin-top:20px">
+    <section id="bye-weeks" class="card" style="margin-top:20px">
       <h2>Bye Weeks (Plan Ahead)</h2>
       <ul class="list-tight">
         <li>Players on bye score <strong>0</strong> that week—bench them.</li>
@@ -532,7 +579,7 @@
     </section>
 
     <!-- Trades -->
-    <section class="card" style="margin-top:20px">
+    <section id="trades" class="card" style="margin-top:20px">
       <h2>Trades</h2>
       <ul class="list-tight">
         <li><strong>Commissioner review</strong> ensures fairness across skill levels.</li>
@@ -544,7 +591,7 @@
     </section>
 
     <!-- Playoffs & Consolation -->
-    <section class="card" style="margin-top:20px">
+    <section id="playoffs" class="card" style="margin-top:20px">
       <h2>Playoffs & Consolation</h2>
       <ul class="list-tight">
         <li><strong>Playoff Field:</strong> 6 teams; top 2 seeds receive a first‑round bye.</li>
@@ -556,7 +603,7 @@
     </section>
 
     <!-- Notifications & Chat -->
-    <section class="grid" style="margin-top:20px">
+    <section id="Tips" class="grid" style="margin-top:20px">
       <div class="card">
         <h2>Notifications</h2>
         <p>Enable push notifications for injuries, lineup reminders, waiver results, and trade offers—especially helpful for beginners.</p>
@@ -601,7 +648,7 @@
     </section>
 
     <!-- Glossary -->
-    <section class="card" style="margin:20px 0 60px">
+    <section id="glossary" class="card" style="margin:20px 0 60px">
       <h2>Glossary</h2>
       <div class="stacked-grid">
         <ul>
