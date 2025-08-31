@@ -79,7 +79,11 @@
     }
     /* Smooth scroll + anchor offset so titles aren't hidden under sticky nav */
     html { scroll-behavior: smooth; }
-    section[id] { scroll-margin-top: 90px; }
+    /* Raise the stop position for anchors */
+    section[id] { scroll-margin-top: 180px; }  /* was 90px */
+    @media (max-width: 640px) {
+      section[id] { scroll-margin-top: 230px; }  /* a bit more room on small screens */
+    }
 
     /* Pill nav */
     .pillnav {
