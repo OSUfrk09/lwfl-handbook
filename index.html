@@ -50,97 +50,85 @@
     .table td {font-size: inherit; /* or set to 14px if you want to lock it */}
     .pos { color: var(--good); font-weight: bold; }  /* positive / gains */
     .neg { color: var(--bad);  font-weight: bold; }  /* negative / penalties */
+    .stacked-grid {
+      columns: 2;
+      column-gap: 40px;
+      max-width: 100%;
+    }
+    .stacked-grid ul {
+      list-style: disc;
+      padding-left: 20px;
+      margin: 0;
+    }
+    .stacked-grid li {
+      break-inside: avoid;
+      margin-bottom: 6px;
+    }
+    @media (max-width: 640px) {
+      .stacked-grid {
+        columns: 1;
+      }
+    }
     @media (max-width:1200px){.grid,.grid-3{grid-template-columns:1fr}.two-col{columns:1}}
 
-    /* --- PRINT TYPOGRAPHY CONTROL --- */
+    /* --- PRINT: unified block with columns preserved --- */
     @media print {
-      /* 1) One knob to control everything */
-      :root { --print-base: 9px; } /* try 12px–14px to taste */
+      /* Base type size knob for print only */
+      :root { --print-base: 9px; } /* try 12–14px for normal density */
 
-      /* 2) Make print render backgrounds/colors accurately */
-      html, body {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
+      /* Color-accurate printing */
+      html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
-      /* 3) Set the base and make everything inherit it */
+      /* Typography scaling */
       html { font-size: var(--print-base) !important; }
       body { font-size: 1rem !important; line-height: 1.35; }
 
-      /* 4) Headings & common text blocks (override any px sizes) */
+      /* Headings */
       .titlecard h1 { font-size: 2rem !important; line-height: 1.2; }
-      .card h2       { font-size: 1.35rem !important; line-height: 1.25; }
-      .card h3       { font-size: 1.1rem !important;  line-height: 1.3;  }
-      p, li, .muted,
-      .kicker,
-      .badge,
-      .callout,
-      .callout * { font-size: 1rem !important; }
+      .card h2      { font-size: 1.35rem !important; line-height: 1.25; }
+      .card h3      { font-size: 1.1rem !important;  line-height: 1.3;  }
 
-      /* 5) Grids & their descendants inherit the base */
-      .grid, .grid-3,
-      .grid *, .grid-3 * { font-size: inherit !important; }
+      /* Common text */
+      p, li, .muted, .kicker, .badge, .callout, .callout * { font-size: 1rem !important; }
 
-      /* 6) Tables: match the base (or make them a hair smaller if you want) */
-      .table,
-      .table th,
-      .table td { font-size: 0.95rem !important; }
-
-      /* 7) Optional: tighten kicker dots a bit in print */
-      .kicker .dot { width: 8px; height: 8px; }
-
-      /* 8) Keep cards whole (your existing rules) */
-      .titlecard, .card, .grid, .grid-3, .table {
-        page-break-inside: avoid; break-inside: avoid;
-      }
-
-      /* 9) If you want the Scoring section to always start on a new page: */
-      .break-before { page-break-before: always; break-before: always; }
-    }
-
-
-    /* Print styles */
-    @media print {
-      body {
-        background: white;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
+      /* Keep cards whole + styling */
       .titlecard {
-        page-break-inside: avoid;
-        break-inside: avoid;
+        page-break-inside: avoid; break-inside: avoid;
         margin-bottom: 24px;
-        Padding-top: 15px;
-        Padding-bottom: 15px;
+        padding-top: 15px; padding-bottom: 15px;
         background: linear-gradient(135deg, var(--brand), var(--brand-2));
-        color: white;
+        color: #fff;
         box-shadow: 0 10px 30px rgba(0,0,0,.12);
       }
-
       .card {
-        page-break-inside: avoid;
-        break-inside: avoid;
+        page-break-inside: avoid; break-inside: avoid;
         margin-bottom: 20px;
-        background: #ffffff;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        background: #fff;
+        box-shadow: 0 6px 20px rgba(0,0,0,.08);
       }
 
-      .grid,
-      .grid-3 {
-        page-break-inside: avoid;
-        break-inside: avoid;
+      /* Grids & tables */
+      .grid, .grid-3, .table { page-break-inside: avoid; break-inside: avoid; }
+      .table, .table th, .table td { font-size: 0.95rem !important; }
+
+      /* ✅ Preserve multi‑column glossary/roster lists in print */
+      .stacked-grid {
+        column-count: 2;           /* force two columns in print */
+        column-gap: 32px !important;
+      }
+      .stacked-grid ul { margin: 0; padding-left: 20px; }
+      .stacked-grid li {
+        break-inside: avoid-column;           /* modern */
+        -webkit-column-break-inside: avoid;   /* Chrome/WebKit */
+        page-break-inside: avoid;             /* extra safety */
+        margin-bottom: 6px;
       }
 
-      .table {
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
+      /* Optional: force a new page before specific sections */
+      .break-before { page-break-before: always; break-before: always; }
 
-      a {
-        text-decoration: underline;
-        color: black;
-      }
+      /* Links */
+      a { text-decoration: underline; color: black; }
     }
   </style>
 </head>
@@ -185,7 +173,7 @@
     <section class="card" style="margin-top:20px">
       <h2>Fantasy Football in Plain English</h2>
       <p>Draft real NFL players to form a fantasy team. Each week, your <em>starters</em> earn points from their real-game stats. You face another team head-to-head; highest score wins. Good records reach the playoffs, and each league’s champion battles in <strong>Week 17</strong> for the Eternal Crown.</p>
-      <div class="grid">
+      <div class="stacked-grid">
         <div>
           <div class="kicker"><span class="dot"></span><strong>Snake Draft</strong> — order flips each round.</div>
           <div class="kicker"><span class="dot"></span><strong>Lineups</strong> — start your best players weekly.</div>
@@ -214,7 +202,7 @@
       </div>
       <div class="card">
         <h2>Rosters & Lineup</h2>
-        <div class="grid">
+        <div class="stacked-grid">
           <ul>
             <li><strong>QB</strong> × 1</li>
             <li><strong>RB</strong> × 2</li>
@@ -536,18 +524,20 @@
     <!-- Glossary -->
     <section class="card" style="margin:20px 0 60px">
       <h2>Glossary</h2>
-      <div class="two-col">
-        <br><strong>ADP:</strong> Average Draft Position.
-        <br><strong>Boom/Bust:</strong> High vs low variance outcomes.
-        <br><strong>Ceiling/Floor:</strong> Best vs worst case likely result.
-        <br><strong>FLEX:</strong> A lineup spot allowing multiple different positions.
-        <br><strong>Handcuff:</strong> Backup RB who would start if the starter is out or is being utilized as a frequent substitue</p>
-        <br><strong>PPR:</strong> Points Per Reception (Half-PPR = 0.5 each).
-        <br><strong>Proj.:</strong> Projected points for the week.
-        <br><strong>Q:</strong> Questionable injury tag. May not start or play.
-        <br><strong>Stream:</strong> Rotate players (often D/ST, K) based on matchup.
-        <br><strong>Tilt:</strong> Letting emotions drive bad decisions—avoid it!
-        <br><strong>Waivers:</strong> Claim system to fairly add players.</p>
+      <div class="stacked-grid">
+        <ul>
+          <li><strong>ADP:</strong> Average Draft Position — where a player is typically picked.</li>
+          <li><strong>Boom/Bust:</strong> High vs low scoring potential — high risk, high reward.</li>
+          <li><strong>Ceiling/Floor:</strong> The likely best-case vs worst-case outcome for a player.</li>
+          <li><strong>FLEX:</strong> A lineup spot that allows multiple positions (RB/WR/TE).</li>
+          <li><strong>Handcuff:</strong> Backup RB who steps in if the starter is injured or rested.</li>
+          <li><strong>PPR:</strong> Points Per Reception. Half-PPR = 0.5 pts per catch.</li>
+          <li><strong>Proj.:</strong> Projected points — a prediction, not a guarantee.</li>
+          <li><strong>Q:</strong> “Questionable” injury tag — player may not play or start.</li>
+          <li><strong>Stream:</strong> Swapping out position players (often K/DST) weekly based on matchups.</li>
+          <li><strong>Tilt:</strong> Letting emotions lead to bad decisions. Happens. Don’t chase it.</li>
+          <li><strong>Waivers:</strong> Time-delayed claim process for dropped or undrafted players.</li>
+        </ul>
       </div>
     </section>
   </div>
