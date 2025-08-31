@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LWFL Handbook</title>
+  <style>
+    :root{
+      --bg:#f7f8fb; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --mutedlight:#ffffff; --brand:#4f46e5; --brand-2:#06b6d4; --good:#059669; --warn:#b45309; --bad:#dc2626;
+      --ring: rgba(79,70,229,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";font-size: 14px;}
+    a{color:var(--brand);text-decoration:none}
+    .wrap{max-width:1000px;margin:40px auto;padding:0 20px}
+    .titlecard{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:white;border-radius:20px;padding:36px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+    .titlecard h1{margin:0 0 6px;font-size:40px;letter-spacing:.3px}
+    .titlecard p{margin:6px 0 0;font-size:16px;opacity:.95}
+    .pill{display:inline-block;background:rgba(255,255,255,.18);padding:6px 10px;border-radius:999px;font-weight:600;margin-right:8px}
+
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .card{background:var(--card);border-radius:16px;padding:20px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+    .card h2,.card h3{margin-top:0}
+    .muted{color:var(--muted)}
+    .mutedlight{color:var(--mutedlight)}
+    .badge{display:inline-block;background:#eef2ff;color:#3730a3;border-radius:999px;padding:4px 10px;font-weight:700;font-size:12px;margin:0 8px 8px 0}
+    .callout{border-left:5px solid var(--brand);padding:16px 16px 16px 14px;background:#f5f7ff;border-radius:10px}
+    .callout.warn{border-left-color:var(--warn);background:#fff7ed; margin-bottom: 16px}
+    .callout.good{border-left-color:var(--good);background:#ecfdf5}
+
+    .list-tight li{margin-bottom:6px}
+
+    .table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:12px}
+    .table th{background:#f3f4f6;text-align:left;padding:10px;font-size:13px;color:#111827}
+    .table td{border-top:1px solid #eef2f7;padding:10px;vertical-align:top;font-size:14px}
+
+    .kicker{display:flex;align-items:center;gap:10px;margin:14px 0;font-size:inherit}
+    .kicker .dot{width:10px;height:10px;border-radius:50%;background:var(--brand)}
+
+    .timeline{position:relative;padding-left:24px}
+    .timeline:before{content:"";position:absolute;left:8px;top:0;bottom:0;width:2px;background:#e5e7eb}
+    .step{position:relative;margin:12px 0;padding-left:8px}
+    .step:before{content:"";position:absolute;left:-20px;top:3px;width:9px;height:9px;border-radius:50%;background:white;border:2px solid var(--brand)}
+
+    .two-col{columns:2;column-gap:24px}
+    .card.break-before {page-break-before: always;break-before: always;}
+    .table,
+    .table th,
+    .table td {font-size: inherit; /* or set to 14px if you want to lock it */}
+    .pos { color: var(--good); font-weight: bold; }  /* positive / gains */
+    .neg { color: var(--bad);  font-weight: bold; }  /* negative / penalties */
+    @media (max-width:1200px){.grid,.grid-3{grid-template-columns:1fr}.two-col{columns:1}}
+
+    /* --- PRINT TYPOGRAPHY CONTROL --- */
+    @media print {
+      /* 1) One knob to control everything */
+      :root { --print-base: 9px; } /* try 12px–14px to taste */
+
+      /* 2) Make print render backgrounds/colors accurately */
+      html, body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      /* 3) Set the base and make everything inherit it */
+      html { font-size: var(--print-base) !important; }
+      body { font-size: 1rem !important; line-height: 1.35; }
+
+      /* 4) Headings & common text blocks (override any px sizes) */
+      .titlecard h1 { font-size: 2rem !important; line-height: 1.2; }
+      .card h2       { font-size: 1.35rem !important; line-height: 1.25; }
+      .card h3       { font-size: 1.1rem !important;  line-height: 1.3;  }
+      p, li, .muted,
+      .kicker,
+      .badge,
+      .callout,
+      .callout * { font-size: 1rem !important; }
+
+      /* 5) Grids & their descendants inherit the base */
+      .grid, .grid-3,
+      .grid *, .grid-3 * { font-size: inherit !important; }
+
+      /* 6) Tables: match the base (or make them a hair smaller if you want) */
+      .table,
+      .table th,
+      .table td { font-size: 0.95rem !important; }
+
+      /* 7) Optional: tighten kicker dots a bit in print */
+      .kicker .dot { width: 8px; height: 8px; }
+
+      /* 8) Keep cards whole (your existing rules) */
+      .titlecard, .card, .grid, .grid-3, .table {
+        page-break-inside: avoid; break-inside: avoid;
+      }
+
+      /* 9) If you want the Scoring section to always start on a new page: */
+      .break-before { page-break-before: always; break-before: always; }
+    }
+
+
+    /* Print styles */
+    @media print {
+      body {
+        background: white;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .titlecard {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 24px;
+        Padding-top: 15px;
+        Padding-bottom: 15px;
+        background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        color: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,.12);
+      }
+
+      .card {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 20px;
+        background: #ffffff;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      }
+
+      .grid,
+      .grid-3 {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .table {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      a {
+        text-decoration: underline;
+        color: black;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Cover / Title -->
+    <section class="titlecard">
+      <h1>LWFL Handbook</h1>
+      <p>Alpha League (Genesis Trophy) · Omega League (Revelation Trophy) · Week 17 faceoff for the <strong>Eternal Crown</strong></p>
+      <p class="mutedlight">Draft Day: <strong>Tuesday, September 2 at 6:30 PM ET (Draft starts: 7:00 PM ET)</strong></p>
+    </section>
+
+    <!-- Quick Reference -->
+    <section class="grid" style="margin-top:20px">
+      <div class="card">
+        <h2>Quick Reference</h2>
+        <ul class="list-tight">
+          <li><strong>Platform:</strong> Sleeper app (iOS/Android) & web (<a href="https://www.sleeper.com">sleeper.com</a>)</li>
+          <li><strong>Draft Type:</strong> Snake (online, in-person gathering)</li>
+          <li><strong>Playoffs:</strong> 6 teams · Top 2 seeds get a bye</li>
+          <li><strong>Waivers:</strong> Rolling · Process Tuesday 3:00 AM ET</li>
+          <li><strong>Post-Drop:</strong> Player locked on waivers for 2 days</li>
+          <li><strong>Scoring:</strong> Half-PPR (0.5 per catch)</li>
+          <li><strong>Trades:</strong> Commish-reviewed · Deadline Week 11</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>First Week Checklist</h2>
+        <ol class="list-tight">
+          <li>Log into Sleeper (app or web) and join Alpha/Omega.</li>
+          <li>Confirm Draft Room opens; build your <strong>Draft Queue</strong>.</li>
+          <li>Enable <strong>notifications</strong> (injuries, lineup reminders, waivers).</li>
+          <li>Set a tentative Week 1 lineup; check for <strong>Thursday</strong> games.</li>
+          <li>Scan bye weeks; avoid stacking byes at the same position.</li>
+          <li>Learn add/drop & waivers; claims run Tuesday 3:00 AM ET.</li>
+          <li>Say hi in <strong>League Chat</strong> and ask questions!</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- What is Fantasy Football -->
+    <section class="card" style="margin-top:20px">
+      <h2>Fantasy Football in Plain English</h2>
+      <p>Draft real NFL players to form a fantasy team. Each week, your <em>starters</em> earn points from their real-game stats. You face another team head-to-head; highest score wins. Good records reach the playoffs, and each league’s champion battles in <strong>Week 17</strong> for the Eternal Crown.</p>
+      <div class="grid">
+        <div>
+          <div class="kicker"><span class="dot"></span><strong>Snake Draft</strong> — order flips each round.</div>
+          <div class="kicker"><span class="dot"></span><strong>Lineups</strong> — start your best players weekly.</div>
+          <div class="kicker"><span class="dot"></span><strong>Half-PPR</strong> — 0.5 points per catch.</div>
+        </div>
+        <div>
+          <div class="kicker"><span class="dot"></span><strong>Waivers/FA</strong> — acquire players via claims or instant adds.</div>
+          <div class="kicker"><span class="dot"></span><strong>Trades</strong> — commish-reviewed for fairness.</div>
+          <div class="kicker"><span class="dot"></span><strong>Playoffs</strong> — 6 teams; top 2 byes; champions meet W17.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- League Structure -->
+    <section class="grid" style="margin-top:20px">
+      <div class="card">
+        <h2>League Structure</h2>
+        <ul class="list-tight">
+          <li>Two leagues: <strong>Alpha</strong> & <strong>Omega</strong></li>
+          <li>10 teams per league</li>
+          <li>Consolation bracket with <strong>Plunger Trophy</strong> (Toilet Bowl)</li>
+          <li>League winners: <strong>Genesis</strong> & <strong>Revelation</strong> trophies</li>
+          <li>Winners clash in Week 17 for the <strong>Eternal Crown</strong></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Rosters & Lineup</h2>
+        <div class="grid">
+          <ul>
+            <li><strong>QB</strong> × 1</li>
+            <li><strong>RB</strong> × 2</li>
+            <li><strong>WR</strong> × 2</li>
+            <li><strong>FLEX</strong> (RB/WR/TE) × 1</li>
+          </ul>
+          <ul>
+            <li><strong>FLEX</strong> (WR/TE) × 1</li>
+            <li><strong>K</strong> × 1</li>
+            <li><strong>D/ST</strong> × 1</li>
+            <li><strong>Bench</strong> × 5 · <strong>IR</strong> × 1</li>
+          </ul>
+        </div>
+        <div class="callout good" style="margin-top:10px"><strong>Tip:</strong> Start Thursday players in their <em>position</em> slots (WR/RB/TE), not FLEX, to keep Sunday flexibility.</div>
+      </div>
+    </section>
+
+    <!-- TEAMS -->
+    <section class="grid" style="margin-top:20px">
+      <div class="card">
+        <h2>Alpha League</h2>
+        <ul class="list-tight">
+          <div class="kicker"><span class="dot"></span><strong>Team 1:</strong> CJ Anderson</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 2:</strong> Amber Polk</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 3:</strong> Robert Coletto</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 4:</strong> Jim Lopez</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 5:</strong> Kelsey Chaney</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 6:</strong> Becky Sillaman</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 7:</strong> Bob Lillie</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 8:</strong> Matthew Ross</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 9:</strong> Kaiya Lynch-Fuller</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 10:</strong> Bill Lynch</div>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Omega League</h2>
+        <ul class="list-tight">
+          <div class="kicker"><span class="dot"></span><strong>Team 1:</strong> Andrew Prin</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 2:</strong> Judy Holliday</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 3:</strong> Todd Wilson</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 4:</strong> Wes Willis</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 5:</strong> Tyler Sledge</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 6:</strong> Charis Meade</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 7:</strong> Brad Chaney</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 8:</strong> Barb Bowser</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 9:</strong> Warren Mansfield</div>
+          <div class="kicker"><span class="dot"></span><strong>Team 10:</strong> Currently Unfilled.</div>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Scoring -->
+    <section class="card" style="margin-top:20px">
+      <h2>Scoring (Half-PPR)</h2>
+      <div class="grid">
+        <div>
+          <h3>Passing</h3>
+          <table class="table">
+            <tr><th>Category</th><th>Points</th><th>Example</th></tr>
+            <tr><td>Yards</td><td><span class="pos">0.05 / yard</span></td><td>300 yds = 15 pts</td></tr>
+            <tr><td>TD</td><td><span class="pos">+4</span></td><td>2 TD = 8 pts</td></tr>
+            <tr><td>2-pt Conv (pass)</td><td><span class="pos">+2</span></td><td>—</td></tr>
+            <tr><td>Interception</td><td><span class="neg">−1</span></td><td>1 INT = −1 pt</td></tr>
+            <tr><td>50+ yd pass TD (bonus)</td><td><span class="pos">+2</span></td><td>—</td></tr>
+          </table>
+
+          <h3>Rushing</h3>
+          <table class="table">
+            <tr><th>Category</th><th>Points</th><th>Example</th></tr>
+            <tr><td>Yards</td><td><span class="pos">0.1 / yard</span></td><td>80 yds = 8 pts</td></tr>
+            <tr><td>TD</td><td><span class="pos">+6</span></td><td>1 TD = 6 pts</td></tr>
+            <tr><td>2-pt Conv</td><td><span class="pos">+2</span></td><td>—</td></tr>
+            <tr><td>50+ yd rush TD (bonus)</td><td><span class="pos">+2</span></td><td>—</td></tr>
+          </table>
+        </div>
+
+        <div>
+          <h3>Receiving</h3>
+          <table class="table">
+            <tr><th>Category</th><th>Points</th><th>Example</th></tr>
+            <tr><td>Reception</td><td><span class="pos">+0.5</span></td><td>6 rec = 3 pts</td></tr>
+            <tr><td>Yards</td><td><span class="pos">0.1 / yard</span></td><td>70 yds = 7 pts</td></tr>
+            <tr><td>TD</td><td><span class="pos">+6</span></td><td>1 TD = 6 pts</td></tr>
+            <tr><td>2-pt Conv</td><td><span class="pos">+2</span></td><td>—</td></tr>
+            <tr><td>50+ yd rec TD (bonus)</td><td><span class="pos">+2</span></td><td>—</td></tr>
+          </table>
+
+          <h3>Kicking</h3>
+          <table class="table">
+            <tr><th>Category</th><th>Points</th><th>Example</th></tr>
+            <tr><td>Field Goal</td><td><span class="pos">+3</span></td><td>—</td></tr>
+            <tr><td>FG bonus (over 30 yds)</td><td><span class="pos">+0.1 / yd</span></td><td>45-yd FG = 4.5 pts</td></tr>
+            <tr><td>PAT made</td><td><span class="pos">+1</span></td><td>—</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="callout"><strong>Half-PPR Example:</strong> 5 receptions (2.5) + 50 yards (5.0) + 1 TD (6) = <strong>13.5</strong> points.</div>
+      <div class="callout good"><strong>Long-Play Bonuses:</strong> 50+ yard TDs (pass/rush/rec) grant +2 — deep threats and homerun RBs get a bump.</div>
+    </section>
+
+    <!-- Defense TEST BREAKOUT 2 -->
+    <section class="card" style="margin-top:20px">
+      <div class="grid">
+        <div>
+          <h3>Defense/Special Teams</h3>
+          <table class="table">
+            <tr><th>Category</th><th>Points</th></tr>
+            <tr><td>Def/ST TD</td><td><span class="pos">+6</span></td></tr>
+            <tr><td>Sack</td><td><span class="pos">+1</span></td></tr>
+            <tr><td>Interception</td><td><span class="pos">+2</span></td></tr>
+            <tr><td>Forced Fumble</td><td><span class="pos">+1</span></td></tr>
+            <tr><td>Fumble Recovery</td><td><span class="pos">+2</span></td></tr>
+            <tr><td>Safety</td><td><span class="pos">+4</span></td></tr>
+            <tr><td>Blocked Kick</td><td><span class="pos">+1</span></td></tr>
+            <tr><td>2-pt Conversion Return</td><td><span class="pos">+2</span></td></tr>
+          </table>
+        </div>
+        <div>
+          <h3>Points Allowed (per game)</h3>
+          <table class="table">
+            <tr><th>PA</th><th>Pts</th><th>PA</th><th>Pts</th><th>PA</th><th>Pts</th></tr>
+            <tr><td>0</td><td><span class="pos">+10</span></td><td>1–6</td><td><span class="pos">+7</span></td><td>7–13</td><td><span class="pos">+4</span></td></tr>
+            <tr><td>14–20</td><td><span class="pos">+1</span></td><td>21–27</td><td>0</td><td>28–34</td><td><span class="neg">−1</span></td></tr>
+            <tr><td>35+</td><td><span class="neg">−4</span></td><td colspan="4"></td></tr>
+          </table>
+                  <div class="callout"><strong>Points Allowed:</strong> Defense/Special Teams start with 10 points each week. As the opposing offense scores points, your total defenseive score will go down.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MISC RULES -->
+    <section class="card" style="margin-top:20px">
+      <h3>Misc. Scoring</h3>
+      <table class="table">
+        <tr><th>Category</th><th>Points</th></tr>
+        <tr><td>Fumble Lost (All Players)</td><td><span class="neg">-2</span></td></tr>
+        <tr><td>Fumble Recovery TD (All Players)</td><td><span class="pos">+6</span></td></tr>
+      </table>
+
+      <div class="callout"><strong>Fumble Recovery TD Example:</strong> RB fumbles the ball, but the WR recovers it for a TD. The WR would get +6.</div>
+    </section>
+
+    <!-- Draft Prep -->
+    <section class="card" style="margin-top:20px">
+      <h2>Draft Day Details & Prep</h2>
+      <div class="grid">
+        <div>
+          <h3>Before the Draft</h3>
+          <ul class="list-tight">
+            <li>Join your league and confirm the <strong>Draft Room</strong> opens on your device.</li>
+            <li>Build a <strong>Draft Queue</strong> (tiers by position) and pre-rank players.</li>
+            <li>Test Wi‑Fi or hotspot; keep a <strong>backup device</strong> handy.</li>
+            <li>If you might be late: fill a deep queue and enable <strong>Auto-Pick</strong>.</li>
+          </ul>
+          <h3>During the Draft</h3>
+          <ul class="list-tight">
+            <li>Mind the clock and the <strong>snake</strong> turnarounds.</li>
+            <li>Track positional runs; don’t panic—trust your tiers.</li>
+            <li>Use the mobile app if your laptop lags.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>If You Can’t Make It</h3>
+          <div class="callout warn"><strong>Heads up:</strong> Tell a commissioner. Pre-rank, build your queue, and toggle Auto-Pick so Sleeper follows your plan.</div>
+          <h3>Starter Strategy</h3>
+          <ul class="list-tight">
+            <li>Balance <em>byes</em> so you’re not empty at one position.</li>
+            <li>Target upside for <strong>FLEX</strong>.</li>
+            <li>Consider a backup RB/WR with a clear path to volume.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Weekly Lineups -->
+    <section class="card" style="margin-top:20px">
+      <h2>Setting Your Lineup Each Week</h2>
+      <div class="grid">
+        <div>
+          <h3>Key Things to Watch</h3>
+          <ul class="list-tight">
+            <li><strong>Game times vary:</strong> Thu night; Sun 1:00/4:05/4:25/8:20 ET; Mon night.</li>
+            <li><strong>Roster locking:</strong> players lock at their game’s kickoff.</li>
+            <li><strong>Thursday players:</strong> start them in position slots, not FLEX.</li>
+            <li>Check <strong>bye weeks</strong> and injuries early.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>How-To</h3>
+          <ul class="list-tight">
+            <li><strong>Mobile:</strong> League → <em>Matchup</em> or <em>Team</em> → tap a player → <em>Start</em>/<em>Bench</em>.</li>
+            <li><strong>Web:</strong> League → <em>Team</em> → drag & drop between bench and starters.</li>
+          </ul>
+          <div class="callout good"><strong>Pro Tip:</strong> Do a midweek pass (after waivers) and a Sunday morning pass. Turn on notifications for late injury news.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Waivers / Free Agency -->
+    <section class="card" style="margin-top:20px">
+      <h2>Waivers, Free Agency & Adds/Drops</h2>
+      <div class="grid">
+        <div>
+          <h3>Definitions</h3>
+          <ul class="list-tight">
+            <li><strong>Waivers:</strong> Claim period; managers submit claims that process at a set time. With <em>rolling waivers</em>, a successful claim moves you to the back of the order.</li>
+            <li><strong>Free Agents (FA):</strong> Players not on waivers can be added instantly.</li>
+          </ul>
+          <h3>LWFL Rules</h3>
+          <ul class="list-tight">
+            <li><strong>Type:</strong> Rolling waivers</li>
+            <li><strong>Process Time:</strong> Tuesdays at <strong>3:00 AM ET</strong></li>
+            <li><strong>After a Drop:</strong> Player sits on waivers for <strong>2 days</strong></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Add/Drop How-To</h3>
+          <ul class="list-tight">
+            <li><strong>Mobile:</strong> <em>Players</em> tab → search/filter → <em>Add</em> (FA) or <em>Claim</em> (waivers). If full, choose a drop.</li>
+            <li><strong>Web:</strong> <em>Players</em> → filter by <em>Available</em> → <em>Add</em>/<em>Claim</em> → confirm drop if needed.</li>
+            <li>Submit multiple claims and reorder preferences; if #1 fails, Sleeper tries #2, etc.</li>
+          </ul>
+          <div class="callout"><strong>Tip:</strong> After waivers run, unclaimed players become free agents until the next waiver lock.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IR Slot -->
+    <section class="card" style="margin-top:20px">
+      <h2>IR Slot (Injured Reserve)</h2>
+      <ul class="list-tight">
+        <li>You have <strong>1 IR</strong> spot. A player must have an eligible injury/out designation to move there.</li>
+        <li>Moving a player to IR frees a bench spot for an add.</li>
+        <li>When the player is no longer eligible, you must move them <em>off</em> IR before adding more players.</li>
+      </ul>
+      <div class="callout warn"><strong>Check Status:</strong> Eligibility can change late in the week. Verify before kickoffs.</div>
+    </section>
+
+    <!-- Bye Weeks -->
+    <section class="card" style="margin-top:20px">
+      <h2>Bye Weeks (Plan Ahead)</h2>
+      <ul class="list-tight">
+        <li>Players on bye score <strong>0</strong> that week—bench them.</li>
+        <li>During the draft, avoid stacking key starters with the same bye.</li>
+        <li>During the season, look 2–3 weeks ahead and stash replacements early.</li>
+      </ul>
+      <div class="callout good"><strong>Tip:</strong> Sleeper player pages display BYE weeks clearly—use them to plan.</div>
+    </section>
+
+    <!-- Trades -->
+    <section class="card" style="margin-top:20px">
+      <h2>Trades</h2>
+      <ul class="list-tight">
+        <li><strong>Commissioner review</strong> ensures fairness across skill levels.</li>
+        <li><strong>Deadline:</strong> Week 11 (no trades after).</li>
+        <li><strong>How to propose:</strong> Open another team → select offer/request players → add notes → send. They can accept/counter/decline.</li>
+        <li><strong>Trade Block:</strong> Optionally list players you’re open to moving.</li>
+      </ul>
+      <div class="callout"><strong>Fair Play:</strong> Seek mutual benefit. No collusion; suspicious trades can be vetoed and reversed.</div>
+    </section>
+
+    <!-- Playoffs & Consolation -->
+    <section class="card" style="margin-top:20px">
+      <h2>Playoffs & Consolation</h2>
+      <ul class="list-tight">
+        <li><strong>Playoff Field:</strong> 6 teams; top 2 seeds receive a first‑round bye.</li>
+        <li><strong>Week 14:</strong> Playoffs begin for both leagues.</li>
+        <li><strong>Week 17:</strong> Alpha champ vs Omega champ for the <strong>Eternal Crown</strong>.</li>
+        <li><strong>League Trophies:</strong> Alpha → <em>Genesis Trophy</em>; Omega → <em>Revelation Trophy</em>.</li>
+        <li><strong>Consolation Bracket:</strong> Last 4 teams in each league play week 14 & 15. Last place teams between both leagues battle for the <strong>Plunger Trophy</strong> in week 16.</li>
+      </ul>
+    </section>
+
+    <!-- Notifications & Chat -->
+    <section class="grid" style="margin-top:20px">
+      <div class="card">
+        <h2>Notifications</h2>
+        <p>Enable push notifications for injuries, lineup reminders, waiver results, and trade offers—especially helpful for beginners.</p>
+        <ul class="list-tight">
+          <li><strong>Mobile:</strong> Profile → Settings → Notifications.</li>
+          <li><strong>Web:</strong> Profile menu → Notifications.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>League Chat</h2>
+        <p>Use built‑in chat for announcements, quick questions, trade talk, and friendly banter. Keep it respectful and fun.</p>
+      </div>
+    </section>
+
+    <!-- Strategy Nuggets -->
+    <section class="grid" style="margin-top:20px">
+      <div class="card">
+        <h2>Streaming Defenses</h2>
+        <p>Many managers “stream” D/ST: pick up a defense facing a weak offense each week rather than holding one all season. <strong> Example: a defense playing against a weak offense is often a better start than a mediocre defense against an elite QB.</strong> </p>
+      </div>
+      <div class="card">
+        <h2>Etiquette</h2>
+        <ul class="list-tight">
+          <li>Always set a lineup, even if your record dips.</li>
+          <li>Respond to trade offers politely and promptly.</li>
+          <li>Be active but fair on waivers—no griefing.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Example Week Timeline -->
+    <section class="card" style="margin-top:20px">
+      <h2>Example Week Walkthrough</h2>
+      <div class="timeline">
+        <div class="step"><strong>Tue 3:00 AM ET:</strong> Waivers process. Review results and the waiver order.</div>
+        <div class="step"><strong>Wed–Thu:</strong> Scan injuries/byes. Add FAs to fill gaps.</div>
+        <div class="step"><strong>Thu Evening:</strong> Double‑check lineup for Thursday Night Football.</div>
+        <div class="step"><strong>Sun Morning:</strong> Final sweep before 1:00 PM kickoffs; replace any late inactives.</div>
+        <div class="step"><strong>Sun Afternoon/Night:</strong> Track your <em>Matchup</em> tab for live scoring & projections.</div>
+        <div class="step"><strong>Mon Night:</strong> Last player(s) finish. Matchup settles.</div>
+      </div>
+    </section>
+
+    <!-- Glossary -->
+    <section class="card" style="margin:20px 0 60px">
+      <h2>Glossary</h2>
+      <div class="two-col">
+        <br><strong>ADP:</strong> Average Draft Position.
+        <br><strong>Boom/Bust:</strong> High vs low variance outcomes.
+        <br><strong>Ceiling/Floor:</strong> Best vs worst case likely result.
+        <br><strong>FLEX:</strong> A lineup spot allowing multiple different positions.
+        <br><strong>Handcuff:</strong> Backup RB who would start if the starter is out or is being utilized as a frequent substitue</p>
+        <br><strong>PPR:</strong> Points Per Reception (Half-PPR = 0.5 each).
+        <br><strong>Proj.:</strong> Projected points for the week.
+        <br><strong>Q:</strong> Questionable injury tag. May not start or play.
+        <br><strong>Stream:</strong> Rotate players (often D/ST, K) based on matchup.
+        <br><strong>Tilt:</strong> Letting emotions drive bad decisions—avoid it!
+        <br><strong>Waivers:</strong> Claim system to fairly add players.</p>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
